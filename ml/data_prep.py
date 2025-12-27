@@ -460,7 +460,10 @@ def select_features_for_training(df):
     # ============================================
     """
     CRITICAL: List all features explicitly to ensure they're included.
-    This prevents accidental filtering due to data type issues.
+    
+    PRODUCTION NOTE: We explicitly EXCLUDE 'high_risk_flag' to prevent data leakage.
+    This flag was used during synthetic data generation to determine defaults,
+    so including it in training would create a circular dependency.
     """
     base_features = [
         # Demographic
@@ -483,10 +486,9 @@ def select_features_for_training(df):
         'loan_tenure_months',
         'interest_rate',
         'loan_amount_category',
-        'tenure_category',
+        'tenure_category'
         
-        # Risk Indicators
-        'high_risk_flag'
+        # NOTE: 'high_risk_flag' is INTENTIONALLY EXCLUDED to prevent data leakage
     ]
     
     # Add one-hot encoded columns
