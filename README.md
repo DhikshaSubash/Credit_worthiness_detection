@@ -7,7 +7,7 @@
 
 > **End-to-end Machine Learning system for credit risk assessment with 85.71% accuracy and 90% ROC-AUC**
 
-An enterprise-grade credit risk assessment platform that combines machine learning with traditional financial risk metrics to automate loan approval decisions and monitor portfolio health. Built for deployment in financial institutions like JP Morgan Chase and consulting firms like Thorogood.
+An enterprise-grade credit risk assessment platform that combines machine learning with traditional financial risk metrics to automate loan approval decisions and monitor portfolio health. Built for deployment in financial institutions and consulting firms.
 
 ---
 
