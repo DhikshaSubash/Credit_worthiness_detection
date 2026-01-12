@@ -28,8 +28,8 @@ from backend.models import (
 # ============================================
 # CONFIGURATION
 # ============================================
-NUM_CUSTOMERS = 50
-NUM_APPLICATIONS = 75
+NUM_CUSTOMERS = 1000
+NUM_APPLICATIONS = 1500
 
 # ============================================
 # HELPER DATA (Same as before)
@@ -331,14 +331,14 @@ def create_applications(session, customers, num_total=75):
         
         # Determine status
         if should_approve:
-            if approved_count < 50:
+            if approved_count < 1000:
                 status = 'Approved'
                 approved_count += 1
             else:
                 status = 'Pending'
                 pending_count += 1
         else:
-            if rejected_count < 15:
+            if rejected_count < 500:
                 status = 'Rejected'
                 rejected_count += 1
             else:

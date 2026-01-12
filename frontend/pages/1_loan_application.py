@@ -5,13 +5,14 @@ Allows users to:
 1. Select existing customer or register new one
 2. Submit loan application
 3. Get real-time ML credit risk assessment
-4. View approval/rejection decision
+4. View approval/rejection decision with VISUAL EXPLANATIONS (SHAP)
 """
 
 import streamlit as st
 import requests
 import json
-from datetime import datetime
+import pandas as pd
+import matplotlib.pyplot as plt
 
 # ============================================
 # PAGE CONFIG
@@ -34,7 +35,8 @@ API_BASE_URL = "http://localhost:5000/api"
 def get_customers():
     """Fetch all customers from API"""
     try:
-        response = requests.get(f"{API_BASE_URL}/customers/", params={"limit": 100})
+        # Requesting 1000 customers to match DB scale
+        response = requests.get(f"{API_BASE_URL}/customers/", params={"limit": 1000})
         if response.status_code == 200:
             return response.json()['customers']
         else:
@@ -44,7 +46,6 @@ def get_customers():
         st.error(f"API connection error: {str(e)}")
         st.warning("Make sure Flask server is running: `python backend/app.py`")
         return []
-
 
 def submit_loan_application(customer_id, loan_amount, loan_tenure, interest_rate, loan_purpose):
     """Submit loan application to API"""
@@ -68,6 +69,35 @@ def submit_loan_application(customer_id, loan_amount, loan_tenure, interest_rate
     except Exception as e:
         return 500, {"error": str(e)}
 
+def plot_risk_factors(contributors):
+    """
+    Generate a simple bar chart for SHAP/Feature Contribution
+    contributors: list of dicts [{'feature': 'dti', 'impact': 0.15}, ...]
+    """
+    if not contributors:
+        return None
+        
+    df = pd.DataFrame(contributors)
+    
+    # Create figure
+    fig, ax = plt.subplots(figsize=(8, 4))
+    
+    # Color coding: Red for Risk (Positive SHAP), Green for Safety (Negative SHAP)
+    # Note: SHAP value > 0 means it pushes towards "Class 1" (High Risk)
+    colors = ['#ff4b4b' if x > 0 else '#28a745' for x in df['impact']]
+    
+    # Plot
+    y_pos = range(len(df))
+    ax.barh(y_pos, df['impact'], color=colors)
+    ax.set_yticks(y_pos)
+    ax.set_yticklabels(df['feature'])
+    ax.set_xlabel("Impact on Risk Probability (SHAP Value)")
+    ax.set_title("Top 5 Factors Driving This Decision")
+    
+    # Add zero line
+    ax.axvline(0, color='black', linewidth=0.8)
+    
+    return fig
 
 # ============================================
 # MAIN PAGE
@@ -177,9 +207,7 @@ with st.form("loan_application_form"):
         
         st.info(f"**Estimated EMI:** ₹{emi:,.2f}/month")
         st.info(f"**Total Repayment:** ₹{emi * loan_tenure:,.2f}")
-        st.info(f"**Total Interest:** ₹{(emi * loan_tenure) - loan_amount:,.2f}")
     
-    # Submit button
     submit_button = st.form_submit_button("🚀 Submit Application", use_container_width=True)
 
 # ============================================
@@ -197,110 +225,61 @@ if submit_button:
     
     st.markdown("---")
     
-    # ============================================
-    # DISPLAY RESULTS
-    # ============================================
     if status_code == 201:
-        st.success("✅ Application Submitted Successfully!")
+        st.success("✅ Application Processed Successfully!")
         
-        # Display results in columns
+        # ---------------- METRICS ROW ----------------
         col1, col2, col3 = st.columns(3)
-        
         with col1:
-            st.metric(
-                label="Application ID",
-                value=f"#{result['application_id']}",
-                help="Unique application identifier"
-            )
-        
+            st.metric("Application ID", f"#{result['application_id']}")
         with col2:
-            st.metric(
-                label="Credit Score",
-                value=f"{result['credit_score']:.0f}",
-                delta="Good" if result['credit_score'] > 700 else "Fair" if result['credit_score'] > 600 else "Poor",
-                help="ML-generated credit score (300-850)"
-            )
-        
+            st.metric("Credit Score", f"{result['credit_score']:.0f}", 
+                     delta="Good" if result['credit_score'] > 700 else "Fair" if result['credit_score'] > 600 else "Poor")
         with col3:
-            st.metric(
-                label="Risk Probability",
-                value=f"{result['risk_probability'] * 100:.2f}%",
-                delta="Low" if result['risk_probability'] < 0.3 else "Medium" if result['risk_probability'] < 0.5 else "High",
-                help="Probability of default predicted by ML model"
-            )
+            st.metric("Risk Probability", f"{result['risk_probability'] * 100:.2f}%", 
+                     delta="Low" if result['risk_probability'] < 0.3 else "High", delta_color="inverse")
         
-        # ============================================
-        # DECISION DISPLAY
-        # ============================================
-        st.markdown("### 🎯 Decision")
+        # ---------------- DECISION ROW ----------------
+        st.markdown("### 🎯 Decision Engine")
         
         if result['status'] == 'Approved':
             st.markdown(f"""
-            <div class="success-box" style="background-color: #d4edda; padding: 1.5rem; border-radius: 0.5rem; border-left: 5px solid #28a745;">
-                <h3 style="color: #155724; margin: 0;">✅ APPLICATION APPROVED</h3>
-                <p style="color: #155724; margin-top: 0.5rem; font-size: 1.1rem;">
-                    <strong>Recommendation:</strong> {result['recommendation']}<br>
-                    <strong>Risk Level:</strong> Low Risk<br>
-                    <strong>Next Steps:</strong> Proceed with loan disbursement process
-                </p>
+            <div style="background-color: #d4edda; padding: 1rem; border-radius: 0.5rem; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin: 0;">✅ APPROVED</h3>
+                <p style="color: #155724;">Recommendation: {result['recommendation']}</p>
             </div>
             """, unsafe_allow_html=True)
-            
             st.balloons()
             
         elif result['status'] == 'Rejected':
             st.markdown(f"""
-            <div class="danger-box" style="background-color: #f8d7da; padding: 1.5rem; border-radius: 0.5rem; border-left: 5px solid #dc3545;">
-                <h3 style="color: #721c24; margin: 0;">❌ APPLICATION REJECTED</h3>
-                <p style="color: #721c24; margin-top: 0.5rem; font-size: 1.1rem;">
-                    <strong>Recommendation:</strong> {result['recommendation']}<br>
-                    <strong>Risk Level:</strong> High Risk<br>
-                    <strong>Reason:</strong> Credit risk score indicates high probability of default
-                </p>
+            <div style="background-color: #f8d7da; padding: 1rem; border-radius: 0.5rem; border-left: 5px solid #dc3545;">
+                <h3 style="color: #721c24; margin: 0;">❌ REJECTED</h3>
+                <p style="color: #721c24;">Reason: {result['recommendation']}</p>
             </div>
             """, unsafe_allow_html=True)
             
-        else:  # Pending
+        else: # Pending
             st.markdown(f"""
-            <div class="warning-box" style="background-color: #fff3cd; padding: 1.5rem; border-radius: 0.5rem; border-left: 5px solid #ffc107;">
+            <div style="background-color: #fff3cd; padding: 1rem; border-radius: 0.5rem; border-left: 5px solid #ffc107;">
                 <h3 style="color: #856404; margin: 0;">⏳ PENDING REVIEW</h3>
-                <p style="color: #856404; margin-top: 0.5rem; font-size: 1.1rem;">
-                    <strong>Recommendation:</strong> {result['recommendation']}<br>
-                    <strong>Risk Level:</strong> Medium Risk<br>
-                    <strong>Next Steps:</strong> Application requires manual review by credit team
-                </p>
+                <p style="color: #856404;">Recommendation: {result['recommendation']}</p>
             </div>
             """, unsafe_allow_html=True)
-        
-        # ============================================
-        # ADDITIONAL DETAILS
-        # ============================================
-        with st.expander("📊 Detailed Analysis"):
-            st.json(result)
-    
-    else:
-        st.error(f"❌ Application submission failed")
-        st.error(f"Error: {result.get('error', 'Unknown error')}")
-        st.code(json.dumps(result, indent=2))
 
-# ============================================
-# SIDEBAR INFO
-# ============================================
-with st.sidebar:
-    st.markdown("### 📝 Application Tips")
-    st.info("""
-    **For Better Approval Chances:**
-    - Keep DTI ratio below 40%
-    - Choose appropriate tenure
-    - Maintain good credit history
-    - Provide accurate information
-    """)
-    
-    st.markdown("### 📊 Credit Score Guide")
-    st.markdown("""
-    - **750-850:** Excellent
-    - **700-749:** Good
-    - **650-699:** Fair
-    - **600-649:** Poor
-    - **<600:** Very Poor
-    """)
+        # ---------------- XAI (SHAP) VISUALIZATION ----------------
+        # 
+        # NOTE: This only works if your backend returns 'contributors' in the JSON
+        if 'contributors' in result:
+            st.markdown("### 🤖 Model Explainability (SHAP)")
+            st.caption("Why did the model make this decision? These are the top factors.")
+            fig = plot_risk_factors(result['contributors'])
+            if fig:
+                st.pyplot(fig)
+        else:
+            # Fallback if backend isn't updated yet
+            with st.expander("📊 Detailed Analysis (JSON)"):
+                st.json(result)
+
+    else:
+        st.error(f"❌ Error: {result.get('error', 'Unknown error')}")

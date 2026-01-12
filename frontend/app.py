@@ -19,12 +19,7 @@ st.set_page_config(
 # ============================================
 # CUSTOM CSS STYLING
 # ============================================
-"""
-Custom CSS for professional appearance.
 
-Interview Note:
-"I added custom styling to match industry standards for financial dashboards."
-"""
 st.markdown("""
     <style>
     /* Main title styling */
@@ -194,10 +189,6 @@ with st.expander("ℹ️ About This Project"):
     - Debt-to-Income (DTI) ratio
     - Loan-to-Value (LTV) ratio
     - NPA classification (Sub-Standard, Doubtful, Loss)
-    
-    **Target Companies:**
-    - JP Morgan Chase (Finance focus)
-    - Thorogood (Data/ML focus)
     """)
 
 # ============================================
@@ -206,8 +197,7 @@ with st.expander("ℹ️ About This Project"):
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #666; padding: 1rem;'>
-    <p>Built with ❤️ using Flask, PostgreSQL, scikit-learn, and Streamlit</p>
-    <p>© 2025 Credit Risk Assessment System | End-to-End ML Project</p>
+    <p>Built using Flask, PostgreSQL, scikit-learn, and Streamlit</p>
 </div>
 """, unsafe_allow_html=True)
 

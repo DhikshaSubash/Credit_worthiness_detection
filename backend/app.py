@@ -167,5 +167,6 @@ if __name__ == '__main__':
     app.run(
         host=Config.API_HOST,
         port=Config.API_PORT,
-        debug=Config.DEBUG
+        debug=Config.DEBUG,
+        use_reloader=False  # Prevent double logging in some environments
     )

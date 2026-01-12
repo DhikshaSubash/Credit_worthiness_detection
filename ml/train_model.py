@@ -13,7 +13,6 @@ Why Random Forest?
 - Robust to outliers
 - Provides feature importance
 - Industry standard for credit scoring
-- Used by banks like JPMC, Wells Fargo
 """
 
 import sys
