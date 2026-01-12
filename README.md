@@ -148,8 +148,8 @@ This system addresses the critical need for **automated, data-driven credit risk
 
 ### Training Metrics
 ```
-Dataset: 66 loan applications (46 low-risk, 20 high-risk)
-Train/Test Split: 80/20 (52 train, 14 test)
+Dataset: 1,500+ loan applications (Synthetic Causal Data)
+Train/Test Split: 80/20 (~1,200 train / ~300 test)
 Features: 28 (after removing data leakage features)
 Algorithm: Random Forest (100 trees, max_depth=10)
 ```
