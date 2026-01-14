@@ -94,7 +94,6 @@ def train_random_forest(X_train, y_train):
     Returns:
         RandomForestClassifier: Trained model
     
-    Interview Note:
     "I used Random Forest because:
     1. It handles non-linear patterns in credit data
     2. It's interpretable (can see feature importance)
@@ -176,7 +175,6 @@ def evaluate_model(model, X_train, X_test, y_train, y_test):
     Returns:
         dict: Performance metrics
     
-    Interview Note:
     "For credit risk, I focused on Recall (catching high-risk applicants)
     more than Precision. It's better to reject a few good applicants
     than approve bad ones (which lead to defaults and losses).
@@ -306,7 +304,6 @@ def cross_validate_model(model, X, y):
     Returns:
         dict: Cross-validation scores
     
-    Interview Note:
     "I used 5-fold cross-validation to ensure the model's performance
     wasn't due to a lucky train-test split. This gives a more reliable
     estimate of how the model will perform in production."
@@ -344,7 +341,6 @@ def save_model(model, feature_names, filename='credit_model.pkl'):
         feature_names: List of feature names
         filename: Output filename
     
-    Interview Note:
     "I saved the model as a pickle file which can be loaded later for
     predictions. In production, this model would be deployed to a server
     and called via API endpoints. The .pkl file is version-controlled
@@ -435,7 +431,5 @@ if __name__ == "__main__":
     """
     Train the model when script is run directly.
     
-    Run this to train the model:
-        python ml/train_model.py
     """
     train_credit_risk_model()
