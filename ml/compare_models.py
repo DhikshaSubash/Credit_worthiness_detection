@@ -2,8 +2,6 @@
 Model Comparison Script
 Benchmarking Random Forest vs Logistic Regression (Industry Standard)
 
-Run this script to generate the "Evidence" table for your interview.
-Usage: python ml/compare_models.py
 """
 import sys
 import os
@@ -76,12 +74,6 @@ def compare_models():
     print(results_df)
     print("\n" + "="*60)
     
-    # 6. Recommendation logic
-    print(f"\nINTERVIEW TALKING POINT:")
-    print("I benchmarked Random Forest against the industry standard (Logistic Regression).")
-    print("Random Forest handled the non-linear financial data natively, whereas Logistic Regression")
-    print("struggled to converge without complex preprocessing. Random Forest also provided")
-    print("higher precision, reducing false alarms.")
 
 if __name__ == "__main__":
     compare_models()
