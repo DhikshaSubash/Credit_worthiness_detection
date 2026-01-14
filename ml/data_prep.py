@@ -26,39 +26,14 @@ from sqlalchemy import text
 
 
 def fetch_training_data():
-    """
-    Fetch data from database and join relevant tables.
-    
-    Why join tables?
-    - ML needs features from multiple sources (customer info, employment, loan history)
-    - Database normalization splits data; we need to combine it for analysis
-    
-    Returns:
-        pd.DataFrame: Combined dataset with all features
-    
-    Interview Note:
-    "I used SQL joins to combine data from 4 tables (Customers, Applications,
-    Employment, Loans). This creates a unified view of each loan application
-    with all relevant features for credit scoring."
-    """
+
     session = get_db_session()
     
     try:
         # ============================================
         # SQL QUERY TO FETCH TRAINING DATA
         # ============================================
-        """
-        Why SQL instead of ORM?
-        - SQL is more efficient for complex joins
-        - Easier to optimize with indexes
-        - Direct control over what data is fetched
-        
-        We're joining:
-        - Applications (target variable: approved/rejected)
-        - Customers (demographics)
-        - Employment (income, job stability)
-        - Loans (historical performance for approved loans)
-        """
+       
         query = text("""
             SELECT 
                 -- Customer Demographics
@@ -124,7 +99,6 @@ def engineer_features(df):
     Returns:
         pd.DataFrame: Data with engineered features
     
-    Interview Note:
     "Feature engineering is crucial. I created features like:
     - Debt-to-Income ratio (DTI)
     - Loan-to-Income ratio
@@ -272,7 +246,7 @@ def encode_categorical_features(df):
     Returns:
         pd.DataFrame: Data with encoded features
     
-    Interview Note:
+    
     "I used Label Encoding for ordinal categories (like experience levels)
     and One-Hot Encoding for nominal categories (like employment type).
     All encoded features are explicitly cast to numeric types to ensure
@@ -351,7 +325,6 @@ def create_target_variable(df):
     Returns:
         pd.DataFrame: Data with target variable
     
-    Interview Note:
     "The target variable is binary (0 or 1) for classification.
     I defined 'high risk' as applications that were rejected OR
     approved but later defaulted. This captures both pre-approval
@@ -398,7 +371,6 @@ def handle_missing_values(df):
     Returns:
         pd.DataFrame: Cleaned data
     
-    Interview Note:
     "I used median imputation for numeric features (robust to outliers)
     and mode imputation for categorical features. I also created
     'missing' indicator columns to capture if missingness itself
@@ -445,8 +417,8 @@ def select_features_for_training(df):
     Returns:
         tuple: (X, y, feature_names)
     
-    Interview Note:
-    "I selected features based on domain knowledge of credit risk:
+    
+    "selected features:
     - Demographics (age, gender)
     - Financial capacity (income, DTI, LTI)
     - Loan characteristics (amount, tenure, purpose)
