@@ -280,7 +280,7 @@ Ensure the following are installed on your system:
 ### Step 1: Clone Repository
 
 ```bash
-git clone https://github.com/rakshanrk/credit-risk-system.git
+git clone https://github.com/DhikshaSubash/Credit_worthiness_detection.git
 cd credit-risk-system
 ```
 
@@ -837,13 +837,13 @@ credit-risk-system/
 
 ## 👤 Author
 
-**Rakshan R K**  
-*Data Science Graduate | Machine Learning Engineer*
+**Dhiksha Subash**  
+*Data Science Graduate*
 
-📧 **Email**: rakshanrk04@gmail.com  
-💼 **LinkedIn**: [linkedin.com/in/rakshanrk](https://linkedin.com/in/rakshanrk)  
-🐙 **GitHub**: [@rakshanrk](https://github.com/rakshanrk)  
-📍 **Location**: Bangalore, India
+📧 **Email**: dhiksha2205@gmail.com  
+💼 **LinkedIn**: [linkedin.com/in/dhiksha-subash-933289320](https://linkedin.com/in/dhiksha-subash-933289320)  
+🐙 **GitHub**: [@DhikshaSubash](https://github.com/DhikshaSubash)  
+📍 **Location**: India
 
 ### About This Project
 
@@ -865,7 +865,7 @@ This project is licensed under the **MIT License**—free to use, modify, and di
 ```
 MIT License
 
-Copyright (c) 2025 Rakshan R K
+Copyright (c) 2025 Dhiksha Subash
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -1027,14 +1027,6 @@ If you're interested in building similar systems, here are recommended resources
 
 ---
 
-## 🌟 Star History
-
-If this project helped you, consider giving it a star! ⭐
-
-[![Star History Chart](https://api.star-history.com/svg?repos=rakshanrk/credit-risk-system&type=Date)](https://star-history.com/#rakshanrk/credit-risk-system&Date)
-
----
-
 ## 📝 Version History
 
 ### v1.0.0 (January 2025)
@@ -1062,10 +1054,10 @@ If this project helped you, consider giving it a star! ⭐
 
 ## 🎯 Project Metrics
 
-![GitHub repo size](https://img.shields.io/github/repo-size/rakshanrk/credit-risk-system)
+![GitHub repo size](https://img.shields.io/github/repo-size/DhikshaSubash/Credit_worthiness_detection)
 ![GitHub last commit](https://img.shields.io/github/last-commit/rakshanrk/credit-risk-system)
-![GitHub issues](https://img.shields.io/github/issues/rakshanrk/credit-risk-system)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/rakshanrk/credit-risk-system)
+![GitHub issues](https://img.shields.io/github/issues/DhikshaSubash/Credit_worthiness_detection)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/DhikshaSubash/Credit_worthiness_detection)
 
 ---
 
@@ -1107,9 +1099,5 @@ Annually:  Review feature importance and add new features
 
 ---
 
-**Built with ❤️ by Rakshan R K | Last Updated: January 2025**
-
----
-
 *For professional inquiries, consulting, or collaboration opportunities:*  
-📧 **rakshanrk04@gmail.com** | 💼 **[LinkedIn](https://linkedin.com/in/rakshanrk)** | 🐙 **[GitHub](https://github.com/rakshanrk)**
+📧 **dhiksha2205@gmail.com** | 💼 **[LinkedIn](https://www.linkedin.com/in/dhiksha-subash-933289320/)** | 🐙 **[GitHub](https://github.com/DhikshaSubash)**
