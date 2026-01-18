@@ -270,7 +270,7 @@ if submit_button:
         # ---------------- XAI (SHAP) VISUALIZATION ----------------
         # 
         # NOTE: This only works if your backend returns 'contributors' in the JSON
-        if 'contributors' in result:
+        if result.get('contributors'):
             st.markdown("### 🤖 Model Explainability (SHAP)")
             st.caption("Why did the model make this decision? These are the top factors.")
             fig = plot_risk_factors(result['contributors'])
