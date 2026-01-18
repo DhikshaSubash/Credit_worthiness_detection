@@ -12,7 +12,7 @@ An end-to-end production-ready credit risk assessment platform that combines Ran
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Project Overview](#-project-overview)
 - [Key Features](#-key-features)
@@ -29,7 +29,7 @@ An end-to-end production-ready credit risk assessment platform that combines Ran
 
 ---
 
-## 🎯 Project Overview
+## Project Overview
 
 This system addresses the critical challenge of **manual loan underwriting** in financial institutions—a process that is slow, inconsistent, and vulnerable to human bias. Traditional credit assessment methods can take 3-5 business days and suffer from subjective decision-making, leading to both missed opportunities and increased default rates.
 
@@ -49,7 +49,7 @@ Rather than using randomly generated data, this system employs **causal syntheti
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 ### 1. ML-Powered Credit Scoring Engine
 - **Random Forest classifier** trained on 28 financial features (1,285 samples)
@@ -87,7 +87,7 @@ Rather than using randomly generated data, this system employs **causal syntheti
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -142,7 +142,7 @@ Rather than using randomly generated data, this system employs **causal syntheti
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Backend Framework
 - **Flask 3.1.0** - Microframework for RESTful API development
@@ -174,7 +174,7 @@ Rather than using randomly generated data, this system employs **causal syntheti
 
 ---
 
-## 📊 ML Model Performance
+## ML Model Performance
 
 ### Training Configuration
 
@@ -268,7 +268,7 @@ Risk          (8.6%)     (91.4%)   (True Positives: 106)
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ### Prerequisites
 
@@ -281,7 +281,7 @@ Ensure the following are installed on your system:
 
 ```bash
 git clone https://github.com/DhikshaSubash/Credit_worthiness_detection.git
-cd credit-risk-system
+cd Credit_worthiness_detection
 ```
 
 ### Step 2: Create Virtual Environment
@@ -395,7 +395,7 @@ Expected output:
 
 ---
 
-## 💻 Usage
+## Usage
 
 ### Start Backend API Server
 
@@ -407,11 +407,11 @@ The Flask API will start on `http://localhost:5000`. You should see:
 
 ```
 ============================================================
-🚀 CREDIT RISK ASSESSMENT API STARTING
+ CREDIT RISK ASSESSMENT API STARTING
 ============================================================
-📍 API running at: http://127.0.0.1:5000
-📊 Database: credit_risk_db
-🔍 Debug mode: True
+ API running at: http://127.0.0.1:5000
+ Database: credit_risk_db
+ Debug mode: True
 ============================================================
 ```
 
@@ -470,7 +470,7 @@ curl -X POST http://localhost:5000/api/loans/apply \
 
 ---
 
-## 📚 API Documentation
+## API Documentation
 
 ### Base URL
 
@@ -693,10 +693,10 @@ Get repayment performance metrics.
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
-credit-risk-system/
+Credit_worthiness_detection/
 │
 ├── backend/                          # Flask REST API
 │   ├── app.py                       # Application entry point (Flask routes)
@@ -735,7 +735,7 @@ credit-risk-system/
 
 ---
 
-## 🧠 Design Decisions
+## Design Decisions
 
 ### Why Flask Over Django?
 
@@ -802,48 +802,48 @@ credit-risk-system/
 
 ---
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 ### Phase 1: Advanced ML
 
-- ✅ **XGBoost Integration**: Benchmark against gradient boosting for potential 2-3% accuracy gain
-- ✅ **SHAP Waterfall Plots**: Visualize cumulative feature contributions in the UI
-- ✅ **Ensemble Model**: Combine Random Forest + Logistic Regression via soft voting
-- ✅ **Online Learning**: Retrain model monthly on new loan data to capture market trends
+- **XGBoost Integration**: Benchmark against gradient boosting for potential 2-3% accuracy gain
+- **SHAP Waterfall Plots**: Visualize cumulative feature contributions in the UI
+- **Ensemble Model**: Combine Random Forest + Logistic Regression via soft voting
+- **Online Learning**: Retrain model monthly on new loan data to capture market trends
 
 ### Phase 2: Production Hardening
 
-- ✅ **JWT Authentication**: Secure API endpoints with role-based access control (admin vs. loan officer)
-- ✅ **Rate Limiting**: Implement Redis-backed rate limiting (100 requests/hour per IP)
-- ✅ **Caching Layer**: Cache portfolio metrics for 5 minutes to reduce database load
-- ✅ **Docker Deployment**: Multi-container setup (Flask + PostgreSQL + Nginx reverse proxy)
-- ✅ **CI/CD Pipeline**: GitHub Actions for automated testing and deployment
+- **JWT Authentication**: Secure API endpoints with role-based access control (admin vs. loan officer)
+- **Rate Limiting**: Implement Redis-backed rate limiting (100 requests/hour per IP)
+- **Caching Layer**: Cache portfolio metrics for 5 minutes to reduce database load
+- **Docker Deployment**: Multi-container setup (Flask + PostgreSQL + Nginx reverse proxy)
+- **CI/CD Pipeline**: GitHub Actions for automated testing and deployment
 
 ### Phase 3: Advanced Analytics
 
-- ✅ **What-If Analysis**: "What if income increases by 20%? How does credit score change?"
-- ✅ **Cohort Analysis**: Track default rates by origination month (e.g., "Q1 2025 loans have 8% default rate")
-- ✅ **Stress Testing**: Simulate portfolio performance under recession scenarios (unemployment spike, interest rate hikes)
-- ✅ **Early Warning System**: Flag loans with 3 consecutive late payments before they become NPA
+- **What-If Analysis**: "What if income increases by 20%? How does credit score change?"
+- **Cohort Analysis**: Track default rates by origination month (e.g., "Q1 2025 loans have 8% default rate")
+- **Stress Testing**: Simulate portfolio performance under recession scenarios (unemployment spike, interest rate hikes)
+- **Early Warning System**: Flag loans with 3 consecutive late payments before they become NPA
 
 ### Phase 4: Enterprise Features
 
-- ✅ **Webhook Integration**: Notify external systems when loan status changes (Approved → Disbursed)
-- ✅ **Audit Logging**: Track all API calls and model predictions for compliance (GDPR, SOC 2)
-- ✅ **A/B Testing Framework**: Test Random Forest vs. XGBoost in production (champion/challenger approach)
-- ✅ **Automated Retraining Pipeline**: Airflow DAG to retrain model monthly and deploy if test accuracy > 94%
+- **Webhook Integration**: Notify external systems when loan status changes (Approved → Disbursed)
+- **Audit Logging**: Track all API calls and model predictions for compliance (GDPR, SOC 2)
+- **A/B Testing Framework**: Test Random Forest vs. XGBoost in production (champion/challenger approach)
+- **Automated Retraining Pipeline**: Airflow DAG to retrain model monthly and deploy if test accuracy > 94%
 
 ---
 
-## 👤 Author
+## Author
 
 **Dhiksha Subash**  
 *Data Science Graduate*
 
-📧 **Email**: dhiksha2205@gmail.com  
-💼 **LinkedIn**: [linkedin.com/in/dhiksha-subash-933289320](https://linkedin.com/in/dhiksha-subash-933289320)  
-🐙 **GitHub**: [@DhikshaSubash](https://github.com/DhikshaSubash)  
-📍 **Location**: India
+**Email**: dhiksha2205@gmail.com  
+**LinkedIn**: [linkedin.com/in/dhiksha-subash-933289320](https://linkedin.com/in/dhiksha-subash-933289320)  
+**GitHub**: [@DhikshaSubash](https://github.com/DhikshaSubash)  
+**Location**: India
 
 ### About This Project
 
@@ -858,7 +858,7 @@ This system was built as a portfolio project to demonstrate end-to-end ML engine
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License**—free to use, modify, and distribute with attribution.
 
@@ -888,7 +888,7 @@ SOFTWARE.
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **scikit-learn** for the robust Random Forest implementation and comprehensive documentation
 - **SHAP** for making machine learning interpretable and regulation-compliant
@@ -898,7 +898,7 @@ SOFTWARE.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! If you'd like to improve this project:
 
@@ -919,7 +919,7 @@ Contributions are welcome! If you'd like to improve this project:
 
 ---
 
-## 📞 Support & Feedback
+## Support & Feedback
 
 ### For Questions or Issues
 
@@ -931,15 +931,15 @@ Contributions are welcome! If you'd like to improve this project:
 
 If you found this project useful or have suggestions for improvement:
 
-- ⭐ **Give it a star** on GitHub
-- 👍 **Share it** with your network on LinkedIn
-- 💬 **Leave a comment** about what you'd like to see next
+- **Give it a star** on GitHub
+- **Share it** with your network on LinkedIn
+- **Leave a comment** about what you'd like to see next
 
 **Press the 'thumbs down' button below any response to provide feedback to the development team.**
 
 ---
 
-## 🎓 Learning Resources
+## Learning Resources
 
 If you're interested in building similar systems, here are recommended resources:
 
@@ -960,24 +960,7 @@ If you're interested in building similar systems, here are recommended resources
 
 ---
 
-## 📊 System Requirements
-
-### Minimum Requirements (Development)
-- **CPU**: 2 cores, 2.0 GHz
-- **RAM**: 4 GB
-- **Storage**: 2 GB free space
-- **OS**: Windows 10, macOS 10.14+, or Linux (Ubuntu 18.04+)
-
-### Recommended Requirements (Production)
-- **CPU**: 4 cores, 3.0 GHz
-- **RAM**: 16 GB
-- **Storage**: 20 GB SSD
-- **OS**: Ubuntu 22.04 LTS or Docker container
-- **Database**: PostgreSQL 12+ with connection pooling (pgBouncer)
-
----
-
-## 🔒 Security Considerations
+## Security Considerations
 
 ### For Production Deployment
 
@@ -1008,7 +991,7 @@ If you're interested in building similar systems, here are recommended resources
 
 ---
 
-## 📈 Performance Benchmarks
+## Performance Benchmarks
 
 ### API Response Times (Local)
 - **GET /customers/**: 45ms (100 records)
@@ -1027,15 +1010,15 @@ If you're interested in building similar systems, here are recommended resources
 
 ---
 
-## 📝 Version History
+## Version History
 
 ### v1.0.0 (January 2025)
-- ✅ Initial release with Random Forest classifier
-- ✅ 9-table PostgreSQL database schema
-- ✅ Flask REST API with 11 endpoints
-- ✅ Streamlit dashboard with SHAP visualizations
-- ✅ 94.16% test accuracy on stress-test dataset
-- ✅ Causal synthetic data generator
+- Initial release with Random Forest classifier
+- 9-table PostgreSQL database schema
+- Flask REST API with 11 endpoints
+- Streamlit dashboard with SHAP visualizations
+- 94.16% test accuracy on stress-test dataset
+- Causal synthetic data generator
 
 ### Planned Releases
 - **v1.1.0**: XGBoost integration and model comparison dashboard
@@ -1044,7 +1027,7 @@ If you're interested in building similar systems, here are recommended resources
 
 ---
 
-## 📚 Related Projects
+## Related Projects
 
 - [Credit Risk Modeling Toolkit](https://github.com/topics/credit-risk) - GitHub topic for similar projects
 - [Lending Club Loan Analysis](https://www.kaggle.com/code/faressayah/lending-club-loan-defaulters-prediction) - Kaggle notebook
@@ -1052,7 +1035,7 @@ If you're interested in building similar systems, here are recommended resources
 
 ---
 
-## 🎯 Project Metrics
+## Project Metrics
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/DhikshaSubash/Credit_worthiness_detection)
 ![GitHub last commit](https://img.shields.io/github/last-commit/rakshanrk/credit-risk-system)
@@ -1061,7 +1044,7 @@ If you're interested in building similar systems, here are recommended resources
 
 ---
 
-## 💡 Use Cases
+## Use Cases
 
 This system can be adapted for:
 
@@ -1073,7 +1056,7 @@ This system can be adapted for:
 
 ---
 
-## 🚨 Known Limitations
+## Known Limitations
 
 1. **Synthetic Data**: Model trained on simulated data—requires retraining on real loan portfolios for production use
 2. **Single Currency**: Currently supports INR only—needs internationalization for multi-currency support
@@ -1083,7 +1066,7 @@ This system can be adapted for:
 
 ---
 
-## 🔄 Continuous Improvement
+## Continuous Improvement
 
 ### Model Retraining Schedule (Production)
 ```
@@ -1100,4 +1083,4 @@ Annually:  Review feature importance and add new features
 ---
 
 *For professional inquiries, consulting, or collaboration opportunities:*  
-📧 **dhiksha2205@gmail.com** | 💼 **[LinkedIn](https://www.linkedin.com/in/dhiksha-subash-933289320/)** | 🐙 **[GitHub](https://github.com/DhikshaSubash)**
+**dhiksha2205@gmail.com** | **[LinkedIn](https://www.linkedin.com/in/dhiksha-subash-933289320/)** | **[GitHub](https://github.com/DhikshaSubash)**
