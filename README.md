@@ -1038,7 +1038,7 @@ If you're interested in building similar systems, here are recommended resources
 ## Project Metrics
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/DhikshaSubash/Credit_worthiness_detection)
-![GitHub last commit](https://img.shields.io/github/last-commit/rakshanrk/credit-risk-system)
+![GitHub last commit](https://img.shields.io/github/last-commit/DhikshaSubash/Credit_worthiness_detection)
 ![GitHub issues](https://img.shields.io/github/issues/DhikshaSubash/Credit_worthiness_detection)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/DhikshaSubash/Credit_worthiness_detection)
 
