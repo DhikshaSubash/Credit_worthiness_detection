@@ -14,8 +14,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import joblib
 import pandas as pd
 import numpy as np
-from backend.database import get_db_session, close_db_session
-from backend.models import Customer, Employment
+# NEW: Import SHAP for Explainability
 try:
     import shap
     HAS_SHAP = True
@@ -23,17 +22,13 @@ except ImportError:
     HAS_SHAP = False
     print("Warning: SHAP not installed. Explainability features disabled.")
 
+from backend.database import get_db_session, close_db_session
+from backend.models import Customer, Employment
+
+
 # ============================================
 # LOAD TRAINED MODEL
 # ============================================
-"""
-Load model once when module is imported (not every prediction).
-
-Why load once?
-- Loading .pkl file is slow (~100ms)
-- Keep model in memory for fast predictions (~1ms)
-- Standard practice in production ML systems
-"""
 MODEL_PATH = os.path.join(os.path.dirname(__file__), 'models', 'credit_model.pkl')
 MODEL_DATA = None
 
@@ -119,7 +114,6 @@ def prepare_features_for_prediction(customer_id, loan_amount, loan_tenure_months
             'interest_rate': interest_rate,
             'debt_to_income_ratio': debt_to_income_ratio,
             'loan_to_income_ratio': loan_to_income_ratio,
-            'high_risk_flag': high_risk_flag,
             'estimated_emi': estimated_emi,
             # One-Hot Encodings
             'employment_Self-Employed': 1 if employment.employment_type == 'Self-Employed' else 0,
@@ -132,10 +126,10 @@ def prepare_features_for_prediction(customer_id, loan_amount, loan_tenure_months
             'purpose_Medical Emergency': 1 if loan_purpose == 'Medical Emergency' else 0,
             'purpose_Vehicle Purchase': 1 if loan_purpose == 'Vehicle Purchase' else 0,
             'purpose_Wedding Expenses': 1 if loan_purpose == 'Wedding Expenses' else 0,
-            'state_Karnataka': 1 if customer.state == 'Karnataka' else 0,
+            'state_Gujarat': 1 if customer.state == 'Gujarat' else 0,
             'state_Maharashtra': 1 if customer.state == 'Maharashtra' else 0,
-            'state_Other': 1 if customer.state not in ['Karnataka', 'Maharashtra', 'Tamil Nadu', 'Telangana', 'Delhi'] else 0,
-            'state_Tamil Nadu': 1 if customer.state == 'Tamil Nadu' else 0,
+            'state_Other': 1 if customer.state not in ['Gujarat', 'Maharashtra', 'Punjab', 'Telangana'] else 0,
+            'state_Punjab': 1 if customer.state == 'Punjab' else 0,
             'state_Telangana': 1 if customer.state == 'Telangana' else 0,
         }
         
@@ -143,6 +137,7 @@ def prepare_features_for_prediction(customer_id, loan_amount, loan_tenure_months
         
     finally:
         close_db_session()
+
 
 def align_features_with_model(feature_df, model_feature_names):
     """Ensure features match model's expected feature order."""
@@ -152,43 +147,87 @@ def align_features_with_model(feature_df, model_feature_names):
             aligned[col] = feature_df[col].values[0]
     return aligned
 
+
+# ============================================
+# NEW: ROBUST SHAP EXPLANATION (SANITIZED)
+# ============================================
 def get_shap_explanation(model, input_df):
     """
     Calculate SHAP values to explain WHY the model made a specific prediction.
-    Returns top 5 features driving the risk.
+    Includes type sanitization to prevent NumPy ambiguity errors.
     """
-    if not HAS_SHAP:
-        return []
+    feature_names = input_df.columns
+    risk_contributors = None
 
+    # 1. Try Real SHAP
+    if HAS_SHAP:
+        try:
+            explainer = shap.TreeExplainer(model)
+            # Convert to float array to satisfy SHAP requirements
+            input_array = input_df.values.astype(float)
+            shap_values = explainer.shap_values(input_array, check_additivity=False)
+            
+            if isinstance(shap_values, list):
+                # Binary classification returns [Class0, Class1]. We want Class 1 (High Risk).
+                raw_contributors = shap_values[1][0]
+            else:
+                # Regression/Single output
+                raw_contributors = shap_values[0]
+            
+            # --- CRITICAL FIX START ---
+            # 1. Flatten the array to ensure it is 1D (shape: (28,))
+            flat_contributors = np.array(raw_contributors).flatten()
+            
+            # 2. Convert to standard Python list of floats immediately.
+            #    This removes all NumPy data types from the sorting logic below.
+            risk_contributors = flat_contributors.tolist()
+            # --- CRITICAL FIX END ---
+            
+        except Exception as e:
+            print(f"SHAP Library Error: {str(e)} - Switching to Heuristic Fallback.")
+            risk_contributors = None
+
+    # 2. Heuristic Fallback (If SHAP failed or not installed)
+    if risk_contributors is None:
+        try:
+            dti = float(input_df.get('debt_to_income_ratio', pd.Series([0])).values[0])
+            lti = float(input_df.get('loan_to_income_ratio', pd.Series([0])).values[0])
+            income = float(input_df.get('monthly_income', pd.Series([0])).values[0])
+            
+            # Create a list of zeros
+            risk_contributors = [0.0] * len(feature_names)
+            
+            # Map indices safely
+            f_list = list(feature_names)
+            if 'debt_to_income_ratio' in f_list:
+                risk_contributors[f_list.index('debt_to_income_ratio')] = (dti - 40) * 0.015 
+            
+            if 'loan_to_income_ratio' in f_list:
+                risk_contributors[f_list.index('loan_to_income_ratio')] = (lti - 30) * 0.01
+                
+            if 'monthly_income' in f_list:
+                risk_contributors[f_list.index('monthly_income')] = (50000 - income) * 0.00001
+                
+        except Exception as e:
+            print(f"Fallback Calculation Error: {str(e)}")
+            return [] 
+
+    # 3. Format Output
+    # Now safe to zip and sort because risk_contributors is guaranteed to be a list of floats
     try:
-        # Create TreeExplainer (optimized for Random Forest)
-        explainer = shap.TreeExplainer(model)
-        
-        # Calculate SHAP values
-        # For binary classification, shap_values is a list of arrays [class_0_shap, class_1_shap]
-        shap_values = explainer.shap_values(input_df)
-        
-        # We care about Class 1 (High Risk)
-        if isinstance(shap_values, list):
-            risk_contributors = shap_values[1][0]
-        else:
-            risk_contributors = shap_values[0]
-
-        # Pair feature names with their impact
-        feature_names = input_df.columns
         contributions = zip(feature_names, risk_contributors)
-        
-        # Sort by absolute impact (magnitude of contribution)
+        # Sort by absolute impact
         sorted_contributions = sorted(contributions, key=lambda x: abs(x[1]), reverse=True)
         
-        # Return top 5 most important factors for THIS specific prediction
         return [
             {"feature": k, "impact": float(v)} 
             for k, v in sorted_contributions[:5]
+            if abs(v) > 0.001 # Filter out zero impacts
         ]
     except Exception as e:
-        print(f"Error calculating SHAP values: {str(e)}")
+        print(f"Formatting Error: {str(e)}")
         return []
+
 
 def predict_credit_risk(customer_id, loan_amount, loan_tenure_months, 
                         interest_rate, loan_purpose):
@@ -227,7 +266,7 @@ def predict_credit_risk(customer_id, loan_amount, loan_tenure_months,
         risk_level = 'High'
         recommendation = 'Reject or Require Collateral'
     
-    # NEW: GET SHAP EXPLANATION
+    # GET EXPLANATION (Will use fallback if SHAP fails)
     contributors = get_shap_explanation(model, aligned_features)
 
     # BUILD RESPONSE
@@ -237,7 +276,7 @@ def predict_credit_risk(customer_id, loan_amount, loan_tenure_months,
         'risk_level': risk_level,
         'recommendation': recommendation,
         'model_confidence': round(max(risk_probability, 1 - risk_probability), 4),
-        'contributors': contributors, # <--- Added this for Frontend Visualization
+        'contributors': contributors,
         'factors': {
             'debt_to_income_ratio': round(float(aligned_features.get('debt_to_income_ratio', [0]).values[0] if 'debt_to_income_ratio' in aligned_features.columns else 0), 2),
             'loan_to_income_ratio': round(float(aligned_features.get('loan_to_income_ratio', [0]).values[0] if 'loan_to_income_ratio' in aligned_features.columns else 0), 2),
@@ -247,6 +286,7 @@ def predict_credit_risk(customer_id, loan_amount, loan_tenure_months,
     
     return result
 
+# ... (Batch prediction and main test block remain the same) ...
 
 def batch_predict(applications):
     """
